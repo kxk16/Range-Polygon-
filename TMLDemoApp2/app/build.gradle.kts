@@ -48,5 +48,7 @@ dependencies {
     // Newly added
     implementation("com.google.code.gson:gson:2.3")
     implementation("com.mapmyindia.sdk:mapmyindia-android-sdk:7.0.3")
+//    implementation("com.mapmyindia.sdk:mapmyindia-android-sdk:7.0.3")
+
 
 }
