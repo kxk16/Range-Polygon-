@@ -15,18 +15,9 @@
 <!--        app:layout_constraintStart_toStartOf="parent"-->
 <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
-
-<!--original one-->
-<!--    <com.mapmyindia.sdk.maps.MapView-->
-<!--        android:id="@+id/map_view"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"/>-->
-
-    <fragment
-        xmlns:map="http://schemas.android.com/apk/res-auto"
-        android:name="com.mapmyindia.sdk.maps.SupportMapFragment"
+    <com.mapmyindia.sdk.maps.MapView
         android:id="@+id/map_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

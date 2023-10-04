@@ -2,21 +2,13 @@ package com.example.tmldemoapp2
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.mapmyindia.sdk.maps.MapFragment
 import com.mapmyindia.sdk.maps.MapView
 import com.mapmyindia.sdk.maps.MapmyIndia
-import com.mapmyindia.sdk.maps.MapmyIndiaMap
-import com.mapmyindia.sdk.maps.OnMapReadyCallback
-import com.mapmyindia.sdk.maps.SupportMapFragment
-import com.mapmyindia.sdk.maps.camera.CameraPosition
-import com.mapmyindia.sdk.maps.camera.CameraUpdate
-import com.mapmyindia.sdk.maps.geometry.LatLng
 import com.mmi.services.account.MapmyIndiaAccountManager
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var mapView: MapView
-    private lateinit var mapFragment: SupportMapFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,10 +25,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mapView = findViewById(R.id.map_view)
         mapView.onCreate(savedInstanceState)
-        
-        mapFragment = supportFragmentManager.findFragmentById(R.id.map_view) as SupportMapFragment
-        mapFragment.getMapAsync(this, )
-
     }
 
     override fun onStart() {
@@ -73,21 +61,4 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onSaveInstanceState(outState)
         mapView.onSaveInstanceState(outState)
     }
-
-    override fun onMapReady(p0: MapmyIndiaMap) {
-        var myMap: MapmyIndiaMap
-
-        val cameraPosition = CameraPosition.Builder()
-            .target(LatLng(18.650767, 73.812482))
-            .zoom(10.0)
-            .tilt(0.0)
-            .build()
-        p0?.cameraPosition = cameraPosition
-
-    }
-
-    override fun onMapError(p0: Int, p1: String?) {
-        TODO("Not yet implemented")
-    }
 }
-
