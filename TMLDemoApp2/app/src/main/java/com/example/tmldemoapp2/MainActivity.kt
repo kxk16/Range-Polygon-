@@ -1,5 +1,6 @@
 package com.example.tmldemoapp2
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.mapmyindia.sdk.maps.MapFragment
@@ -8,8 +9,10 @@ import com.mapmyindia.sdk.maps.MapmyIndia
 import com.mapmyindia.sdk.maps.MapmyIndiaMap
 import com.mapmyindia.sdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.maps.SupportMapFragment
+import com.mapmyindia.sdk.maps.annotations.PolygonOptions
 import com.mapmyindia.sdk.maps.camera.CameraPosition
 import com.mapmyindia.sdk.maps.camera.CameraUpdate
+import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
 import com.mapmyindia.sdk.maps.geometry.LatLng
 import com.mmi.services.account.MapmyIndiaAccountManager
 
@@ -33,7 +36,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mapView = findViewById(R.id.map_view)
         mapView.onCreate(savedInstanceState)
-        
+
         mapFragment = supportFragmentManager.findFragmentById(R.id.map_view) as SupportMapFragment
         mapFragment.getMapAsync(this, )
 
@@ -78,12 +81,33 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         var myMap: MapmyIndiaMap
 
         val cameraPosition = CameraPosition.Builder()
-            .target(LatLng(18.650767, 73.812482))
-            .zoom(10.0)
+//            .target(LatLng(18.650767, 73.812482))
+            .target(LatLng(28.549356, 77.26780099999999))
+            .zoom(16.0)
             .tilt(0.0)
             .build()
         p0?.cameraPosition = cameraPosition
 
+
+
+//        p0?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(18.650767,73.812482), 14.0))
+//        p0?.easeCamera(CameraUpdateFactory.newLatLngZoom(LatLng(18.650767,73.812482), 14.0))
+//        p0?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(18.650767,73.812482), 14.0))
+
+
+
+        val latLngList = mutableListOf<LatLng>()
+
+        // Add LatLng objects to the list
+        latLngList.add(LatLng(28.549356, 77.26780099999999)) // San Francisco, CA
+        latLngList.add(LatLng(28.551844, 77.26749)) // Los Angeles, CA
+        latLngList.add(LatLng(28.554454, 77.265473))  // New York, NY
+        latLngList.add(LatLng(28.549637999999998, 77.262909))  // New York, NY
+
+        p0.addPolygon(
+            PolygonOptions()
+            .addAll(latLngList)
+            .fillColor(Color.parseColor("#3bb2d0")))
     }
 
     override fun onMapError(p0: Int, p1: String?) {
