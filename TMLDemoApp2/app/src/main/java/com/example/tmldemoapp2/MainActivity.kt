@@ -78,16 +78,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(p0: MapmyIndiaMap) {
-        var myMap: MapmyIndiaMap
-
-        val cameraPosition = CameraPosition.Builder()
-//            .target(LatLng(18.650767, 73.812482))
-            .target(LatLng(28.549356, 77.26780099999999))
-            .zoom(16.0)
-            .tilt(0.0)
-            .build()
-        p0?.cameraPosition = cameraPosition
-
+        var myMap: MapmyIndiaMap = p0
 
 
 //        p0?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(18.650767,73.812482), 14.0))
@@ -95,19 +86,42 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //        p0?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(18.650767,73.812482), 14.0))
 
 
-
         val latLngList = mutableListOf<LatLng>()
 
         // Add LatLng objects to the list
-        latLngList.add(LatLng(28.549356, 77.26780099999999)) // San Francisco, CA
-        latLngList.add(LatLng(28.551844, 77.26749)) // Los Angeles, CA
-        latLngList.add(LatLng(28.554454, 77.265473))  // New York, NY
-        latLngList.add(LatLng(28.549637999999998, 77.262909))  // New York, NY
+        latLngList.add(LatLng(28.549356, 77.26780099999999))
+        latLngList.add(LatLng(28.551844, 77.26749))
+        latLngList.add(LatLng(28.554454, 77.265473))
+        latLngList.add(LatLng(28.549637999999998, 77.262909))
 
-        p0.addPolygon(
+        myMap.addPolygon(
             PolygonOptions()
             .addAll(latLngList)
             .fillColor(Color.parseColor("#3bb2d0")))
+
+        //Calculating the median of all latlngs
+        var lat_temp = 0.0
+        var lng_temp = 0.0
+
+        for(x in latLngList){
+            lat_temp = lat_temp + x.latitude
+            lng_temp = lng_temp + x.longitude
+        }
+
+        val size = latLngList.size
+        lat_temp = lat_temp/size
+        lng_temp = lng_temp/size
+
+
+
+
+        val cameraPosition = CameraPosition.Builder()
+//            .target(LatLng(18.650767, 73.812482))
+            .target(LatLng(lat_temp, lng_temp))
+            .zoom(15.0)
+            .tilt(0.0)
+            .build()
+        myMap?.cameraPosition = cameraPosition
     }
 
     override fun onMapError(p0: Int, p1: String?) {
