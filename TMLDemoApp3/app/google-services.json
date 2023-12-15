@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "474088245185",
+    "project_id": "range-polygon-abe6a",
+    "storage_bucket": "range-polygon-abe6a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:474088245185:android:1ca3bdd4fc64dbfb509140",
+        "android_client_info": {
+          "package_name": "com.example.tmldemoapp3"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBa7p7OSckr2mPnmHER_z7BwoC7sp6R4js"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

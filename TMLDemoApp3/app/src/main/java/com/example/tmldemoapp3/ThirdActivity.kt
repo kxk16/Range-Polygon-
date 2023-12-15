@@ -4,15 +4,20 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.mapmyindia.sdk.maps.MapView
 import com.mapmyindia.sdk.maps.MapmyIndia
 import com.mapmyindia.sdk.maps.MapmyIndiaMap
 import com.mapmyindia.sdk.maps.OnMapReadyCallback
 import com.mapmyindia.sdk.maps.SupportMapFragment
+import com.mapmyindia.sdk.maps.annotations.IconFactory
+import com.mapmyindia.sdk.maps.annotations.MarkerOptions
 import com.mapmyindia.sdk.maps.annotations.PolygonOptions
 import com.mapmyindia.sdk.maps.camera.CameraPosition
 import com.mapmyindia.sdk.maps.geometry.LatLng
 import com.mmi.services.account.MapmyIndiaAccountManager
+import kotlin.math.*
+
 
 class ThirdActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -76,12 +81,6 @@ class ThirdActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(p0: MapmyIndiaMap) {
         var myMap: MapmyIndiaMap = p0
 
-
-//        p0?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(18.650767,73.812482), 14.0))
-//        p0?.easeCamera(CameraUpdateFactory.newLatLngZoom(LatLng(18.650767,73.812482), 14.0))
-//        p0?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(18.650767,73.812482), 14.0))
-
-
         val latLngList = mutableListOf<LatLng>()
 
         // Add LatLng objects to the list
@@ -93,7 +92,7 @@ class ThirdActivity : AppCompatActivity(), OnMapReadyCallback {
         myMap.addPolygon(
             PolygonOptions()
                 .addAll(latLngList)
-                .fillColor(Color.parseColor("#3bb2d0")))
+                .fillColor(Color.parseColor("#3bb2d050")))
 
         //Calculating the median of all latlngs
         var lat_temp = 0.0
@@ -108,11 +107,28 @@ class ThirdActivity : AppCompatActivity(), OnMapReadyCallback {
         lat_temp = lat_temp/size
         lng_temp = lng_temp/size
 
+        for (x in latLngList){
+            var y = acos(sin(lat_temp)*sin(x.latitude)+ cos(lat_temp)*cos(x.latitude)*cos(x.longitude -lng_temp))*6371
+            Log.d("Dist", "Distance: $y")
+        }
+
+        val point: LatLng = LatLng(28.54, 77.27)
+
+
+
+//        val markerOptions: MarkerOptions = MarkerOptions().position(latLngList[0]).icon(IconFactory.getInstance(this).fromResource(R.drawable.location_arrow_solid_2))
+//        markerOptions.title= "Marker"
+//        markerOptions.snippet = "17.036"
+//        p0?.addMarker(markerOptions)
+
+//        val markerOptions: MarkerOptions = MarkerOptions().position(point).icon(IconFactory.getInstance(this).fromResource(R.drawable.location_arrow_solid_2))
+//        markerOptions.title= "Marker"
+//        markerOptions.snippet = "This is a Marker"
+//        p0?.addMarker(markerOptions)
 
 
 
         val cameraPosition = CameraPosition.Builder()
-//            .target(LatLng(18.650767, 73.812482))
             .target(LatLng(lat_temp, lng_temp))
             .zoom(15.0)
             .tilt(0.0)

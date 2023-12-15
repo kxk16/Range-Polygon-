@@ -3,6 +3,7 @@ package com.example.tmldemoapp2
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.mapmyindia.sdk.maps.MapFragment
 import com.mapmyindia.sdk.maps.MapView
 import com.mapmyindia.sdk.maps.MapmyIndia
@@ -15,11 +16,19 @@ import com.mapmyindia.sdk.maps.camera.CameraUpdate
 import com.mapmyindia.sdk.maps.camera.CameraUpdateFactory
 import com.mapmyindia.sdk.maps.geometry.LatLng
 import com.mmi.services.account.MapmyIndiaAccountManager
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mapView: MapView
     private lateinit var mapFragment: SupportMapFragment
+    private var latLngList = mutableListOf<LatLng>()
+
+    val BASE_URL = "http://10.0.2.2:3000/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,13 +95,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //        p0?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(18.650767,73.812482), 14.0))
 
 
-        val latLngList = mutableListOf<LatLng>()
+        getMyData()
+
 
         // Add LatLng objects to the list
-        latLngList.add(LatLng(28.549356, 77.26780099999999))
-        latLngList.add(LatLng(28.551844, 77.26749))
-        latLngList.add(LatLng(28.554454, 77.265473))
-        latLngList.add(LatLng(28.549637999999998, 77.262909))
+//        latLngList.add(LatLng(28.549356, 77.26780099999999))
+//        latLngList.add(LatLng(28.551844, 77.26749))
+//        latLngList.add(LatLng(28.554454, 77.265473))
+//        latLngList.add(LatLng(28.549637999999998, 77.262909))
 
         myMap.addPolygon(
             PolygonOptions()
@@ -103,16 +113,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         var lat_temp = 0.0
         var lng_temp = 0.0
 
-        for(x in latLngList){
-            lat_temp = lat_temp + x.latitude
-            lng_temp = lng_temp + x.longitude
+        for (x in latLngList) {
+            lat_temp += x.latitude
+            lng_temp += x.longitude
         }
 
         val size = latLngList.size
-        lat_temp = lat_temp/size
-        lng_temp = lng_temp/size
-
-
+        if (size > 0) {
+            lat_temp /= size
+            lng_temp /= size
+        }
 
 
         val cameraPosition = CameraPosition.Builder()
@@ -122,6 +132,46 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             .tilt(0.0)
             .build()
         myMap?.cameraPosition = cameraPosition
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    }
+
+    private fun getMyData() {
+        val retrofitBuilder = Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(BASE_URL)
+            .build()
+            .create(ApiInterface::class.java)
+
+        val retrofitData = retrofitBuilder.getData()
+
+        retrofitData.enqueue(object : Callback<List<Geopoint>?> {
+            override fun onResponse(
+                call: Call<List<Geopoint>?>,
+                response: Response<List<Geopoint>?>
+            ) {
+                val responseBody = response.body()!!
+
+                for (myData in responseBody) {
+                    val lat = myData.lat.toDouble()
+                    val lng = myData.lng.toDouble()
+
+                    if (lat != null && lng != null && !lat.isNaN() && !lng.isNaN()) {
+                        latLngList.add(LatLng(lat, lng))
+                    } else {
+                        // Handle invalid latitude or longitude
+                        // Log a warning, skip this data point, or provide default values
+                        Log.w("LatLng", "Invalid latitude or longitude for data: $myData")
+                    }
+                }
+
+
+            }
+
+            override fun onFailure(call: Call<List<Geopoint>?>, t: Throwable) {
+            }
+        })
     }
 
     override fun onMapError(p0: Int, p1: String?) {
